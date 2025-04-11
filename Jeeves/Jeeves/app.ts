@@ -15,6 +15,7 @@ import { ConfigHandler } from "./MessageHandlers/ConfigHandler";
 import guildSettingsJson from "./guildSettings.json";
 import { RegexHandler } from "./MessageHandlers/RegexHandler";
 import { ChannelDefaults } from "./Objects/ChannelDefaults";
+import { RoleHandler } from "./MessageHandlers/RoleHandler";
 
 //random todos:
 //wanna refactor out the whole cmd is the first word and args are the rest, just work with the whole word array rather than splitting it up
@@ -37,6 +38,7 @@ const Discord = require("discord.js");
 const fs = require("fs");
 const { Console } = require("console");
 
+
 const bot: Client = new Discord.Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildEmojisAndStickers,
         GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMessageReactions,
@@ -44,6 +46,9 @@ const bot: Client = new Discord.Client({
 });
 
 export var guildSettings: Array<GuildSettings> = []; 
+export const roleColorList: string[] = ["White", "Aqua", "Green", "Blue", "Yellow", "Purple", "LuminousVividPink", "Fuchsia", "Gold",
+    "Orange", "Red", "Grey", "Navy", "DarkAqua", "DarkGreen", "DarkBlue", "DarkPurple", "DarkVividPink", "DarkGold", "DarkOrange",
+    "DarkRed", "DarkGrey", "DarkerGrey", "LightGrey", "DarkNavy", "Blurple", "Greyple", "DarkButNotBlack", "NotQuiteBlack"];
 
 ///
 /// inGuildList: Checks if targetGuild is in the provided guildList
@@ -96,6 +101,15 @@ function logConfig(source: string) {
         }
         console.log(jsonString);
     });
+}
+
+export function createColorRolesIfNotExist(guild: Guild) {
+    
+    for (var color of roleColorList) {
+        if (guild.roles.cache.find(role => role.name == `jeeves_${color}`) == undefined) { //TODO - check that the role is the right color
+            guild.roles.create({ name: `jeeves_${color}`, color: color as ColorResolvable })
+        }
+    }
 }
 
 //occurs when bot hits "ready" state
@@ -477,6 +491,10 @@ bot.on(Events.MessageCreate, async message => {
     //Place TRADITIONAL commands down here
     //////////////////////////////////////
 
+    if (new RoleHandler().ingest(messageArray, message)) {
+        return;
+    }
+
     //help
     if (cmd === `${tradPrefix}help`) {
         console.log("Displaying Help");
@@ -505,6 +523,7 @@ bot.on(Events.MessageCreate, async message => {
                     { name: "!revertChannelNames", value: "Reverts all channel names with a default value to their default value. See !setDefaultName" },
                     { name: "!poll [question]", value: "Reacts to your question with a yes no and meh option for people to vote on. You can also specify custom options by placing emojis before the question, separated by spaces!" },
                     { name: "!getServerConfig", value: "Prints a json object containing the configuration for the current server. May be confusing!"},
+                    { name: "!setColor", value: "Allows you to select the color of your name! Type the command for a list of colors, then type !setColor {color} (please use designated channel)."},
                     { name: "Passive Commands", value: "This bot may also contain some passive triggers when it sees messages with certain words" },
                     { name: "For More:", value: "visit https://github.com/armhandstudios/ScottBot" }
                 );

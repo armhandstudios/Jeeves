@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.exportGuildSettings = exports.guildSettings = void 0;
+exports.createColorRolesIfNotExist = exports.exportGuildSettings = exports.roleColorList = exports.guildSettings = void 0;
 process.stdout.write("Starting Jeeves");
 /// <reference path="Objects/GuildSettings.ts" />
 /// <reference path="Objects/VoteChannel.ts" />
@@ -17,6 +17,7 @@ const ConfigHandler_1 = require("./MessageHandlers/ConfigHandler");
 const guildSettings_json_1 = __importDefault(require("./guildSettings.json"));
 const RegexHandler_1 = require("./MessageHandlers/RegexHandler");
 const ChannelDefaults_1 = require("./Objects/ChannelDefaults");
+const RoleHandler_1 = require("./MessageHandlers/RoleHandler");
 //random todos:
 //wanna refactor out the whole cmd is the first word and args are the rest, just work with the whole word array rather than splitting it up
 //command to lock help commands to a specific channel. if i do this, then will need to track for channel changes to the server.
@@ -42,6 +43,9 @@ const bot = new Discord.Client({
         discord_js_1.GatewayIntentBits.MessageContent]
 });
 exports.guildSettings = [];
+exports.roleColorList = ["White", "Aqua", "Green", "Blue", "Yellow", "Purple", "LuminousVividPink", "Fuchsia", "Gold",
+    "Orange", "Red", "Grey", "Navy", "DarkAqua", "DarkGreen", "DarkBlue", "DarkPurple", "DarkVividPink", "DarkGold", "DarkOrange",
+    "DarkRed", "DarkGrey", "DarkerGrey", "LightGrey", "DarkNavy", "Blurple", "Greyple", "DarkButNotBlack", "NotQuiteBlack"];
 ///
 /// inGuildList: Checks if targetGuild is in the provided guildList
 ///
@@ -92,6 +96,14 @@ function logConfig(source) {
         console.log(jsonString);
     });
 }
+function createColorRolesIfNotExist(guild) {
+    for (var color of exports.roleColorList) {
+        if (guild.roles.cache.find(role => role.name == `jeeves_${color}`) == undefined) { //TODO - check that the role is the right color
+            guild.roles.create({ name: `jeeves_${color}`, color: color });
+        }
+    }
+}
+exports.createColorRolesIfNotExist = createColorRolesIfNotExist;
 //occurs when bot hits "ready" state
 bot.on("ready", async () => {
     console.log(`${bot.user.username} is online!`);
@@ -422,6 +434,9 @@ bot.on(discord_js_1.Events.MessageCreate, async (message) => {
     //////////////////////////////////////
     //Place TRADITIONAL commands down here
     //////////////////////////////////////
+    if (new RoleHandler_1.RoleHandler().ingest(messageArray, message)) {
+        return;
+    }
     //help
     if (cmd === `${tradPrefix}help`) {
         console.log("Displaying Help");
@@ -442,7 +457,7 @@ bot.on(discord_js_1.Events.MessageCreate, async (message) => {
             let helpembed = new Discord.EmbedBuilder()
                 .setDescription("Available Commands: (This list is incomplete and incorrect)")
                 .setColor("#CC7F3A")
-                .addFields({ name: "!help", value: "Show this message" }, { name: "!setBotConfig", value: "Designates a channel as the bot config channel. This is required to get server join/leave messages" }, { name: "!setUpvote #channel [emoji]", value: "Designates a channel to be an upvote channel, where Jeeves reacts to every attachment with the specified emoji to start an upvote. Default is thumbs up" }, { name: "!setDefaultName #channel [defaultChannelName]", value: "Sets the default name of a channel to the given value. If no value is given, it will set the default channel name to its current name. To be used with !revertChannelNames" }, { name: "!revertChannelNames", value: "Reverts all channel names with a default value to their default value. See !setDefaultName" }, { name: "!poll [question]", value: "Reacts to your question with a yes no and meh option for people to vote on. You can also specify custom options by placing emojis before the question, separated by spaces!" }, { name: "!getServerConfig", value: "Prints a json object containing the configuration for the current server. May be confusing!" }, { name: "Passive Commands", value: "This bot may also contain some passive triggers when it sees messages with certain words" }, { name: "For More:", value: "visit https://github.com/armhandstudios/ScottBot" });
+                .addFields({ name: "!help", value: "Show this message" }, { name: "!setBotConfig", value: "Designates a channel as the bot config channel. This is required to get server join/leave messages" }, { name: "!setUpvote #channel [emoji]", value: "Designates a channel to be an upvote channel, where Jeeves reacts to every attachment with the specified emoji to start an upvote. Default is thumbs up" }, { name: "!setDefaultName #channel [defaultChannelName]", value: "Sets the default name of a channel to the given value. If no value is given, it will set the default channel name to its current name. To be used with !revertChannelNames" }, { name: "!revertChannelNames", value: "Reverts all channel names with a default value to their default value. See !setDefaultName" }, { name: "!poll [question]", value: "Reacts to your question with a yes no and meh option for people to vote on. You can also specify custom options by placing emojis before the question, separated by spaces!" }, { name: "!getServerConfig", value: "Prints a json object containing the configuration for the current server. May be confusing!" }, { name: "!setColor", value: "Allows you to select the color of your name! Type the command for a list of colors, then type !setColor {color} (please use designated channel)." }, { name: "Passive Commands", value: "This bot may also contain some passive triggers when it sees messages with certain words" }, { name: "For More:", value: "visit https://github.com/armhandstudios/ScottBot" });
             message.channel.send({ embeds: [helpembed] });
             return;
         }
