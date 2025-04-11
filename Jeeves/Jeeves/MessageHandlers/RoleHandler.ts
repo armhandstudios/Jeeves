@@ -1,6 +1,6 @@
 ///<reference path="../app.ts"/>
 
-import { ColorResolvable, Message } from "discord.js";
+import { ColorResolvable, Message, RoleResolvable, Role } from "discord.js";
 import { BaseHandler } from "./BaseHandler";
 import { roleColorList, createColorRolesIfNotExist } from "../app"
 
@@ -32,8 +32,15 @@ export class RoleHandler extends BaseHandler {
             return;
         }
 
-        message.member.roles.remove(message.member.roles.cache.each(r => r.name.includes('jeeves_')))
-            .then(member => member.roles.add(message.guild.roles.cache.find(role => role.name == `jeeves_${args[0]}`))).catch(_ => null);
+        var colorRoleIter: Role;
+        for (var color of roleColorList) {
+            if (color != args[0]) {
+                colorRoleIter = message.member.roles.cache.find(r => r.name == `jeeves_${color}`)
+                message.member.roles.remove(colorRoleIter).catch(_ => null);
+            }
+        }
+
+        message.member.roles.add(message.guild.roles.cache.find(role => role.name == `jeeves_${args[0]}`));
     }
 
     SetUpColorRoles(message: Message): void {

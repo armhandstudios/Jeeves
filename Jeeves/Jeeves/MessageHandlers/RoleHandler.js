@@ -28,8 +28,14 @@ class RoleHandler extends BaseHandler_1.BaseHandler {
             message.channel.send(`Please say which color you want to be from the following (mind your caps) - ${app_1.roleColorList.toString()}`);
             return;
         }
-        message.member.roles.remove(message.member.roles.cache.each(r => r.name.includes('jeeves_')))
-            .then(member => member.roles.add(message.guild.roles.cache.find(role => role.name == `jeeves_${args[0]}`))).catch(_ => null);
+        var colorRoleIter;
+        for (var color of app_1.roleColorList) {
+            if (color != args[0]) {
+                colorRoleIter = message.member.roles.cache.find(r => r.name == `jeeves_${color}`);
+                message.member.roles.remove(colorRoleIter).catch(_ => null);
+            }
+        }
+        message.member.roles.add(message.guild.roles.cache.find(role => role.name == `jeeves_${args[0]}`));
     }
     SetUpColorRoles(message) {
         //Default all the other roles
