@@ -18,6 +18,7 @@ const guildSettings_json_1 = __importDefault(require("./guildSettings.json"));
 const RegexHandler_1 = require("./MessageHandlers/RegexHandler");
 const ChannelDefaults_1 = require("./Objects/ChannelDefaults");
 const RoleHandler_1 = require("./MessageHandlers/RoleHandler");
+const ActivityHandler_1 = require("./MessageHandlers/ActivityHandler");
 //random todos:
 //wanna refactor out the whole cmd is the first word and args are the rest, just work with the whole word array rather than splitting it up
 //command to lock help commands to a specific channel. if i do this, then will need to track for channel changes to the server.
@@ -378,6 +379,9 @@ bot.on(discord_js_1.Events.MessageCreate, async (message) => {
     //Put PASSIVE commands here
     ///////////////////////////
     if (new RegexHandler_1.RegexHandler().ingest(messageArray, message)) {
+        return;
+    }
+    if (new ActivityHandler_1.ActivityHandler().ingest(messageArray, message)) {
         return;
     }
     //upvote channel passive effect

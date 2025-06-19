@@ -26,7 +26,8 @@ export class RegexHandler extends BaseHandler {
 
     checkForPhrases(message: Message): boolean {
         let ret: boolean = false;
-        ret = ret || this.checkForbiddenName(message)
+        ret = ret || this.checkForbiddenName(message);
+        ret = ret || this.checkTroints(message);
 
         return ret;
     }
@@ -55,6 +56,14 @@ export class RegexHandler extends BaseHandler {
         if (/s.ot.?.*w.?oz.*/i.test(message.content.toLowerCase())) {
             console.log("How dare you say that name in this server");
             message.delete().catch(O_o => { console.log("Couldn't delete?") });
+            return true;
+        }
+    }
+
+    checkTroints(message: Message): boolean {
+        if (/@everyone it.?s time fo+r.*/i.test(message.content.toLowerCase())) {
+            console.log("troint time");
+            message.channel.send({ files: [{ attachment: 'trivia_troints.png' }] });
             return true;
         }
     }
