@@ -47,6 +47,7 @@
     <Folder Include="Objects\Trivia\" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="MessageHandlers\ActivityHandler.ts" />
     <TypeScriptCompile Include="MessageHandlers\BaseHandler.ts">
       <SubType>Code</SubType>
     </TypeScriptCompile>

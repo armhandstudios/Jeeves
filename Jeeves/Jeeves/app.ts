@@ -16,6 +16,7 @@ import guildSettingsJson from "./guildSettings.json";
 import { RegexHandler } from "./MessageHandlers/RegexHandler";
 import { ChannelDefaults } from "./Objects/ChannelDefaults";
 import { RoleHandler } from "./MessageHandlers/RoleHandler";
+import { ActivityHandler } from "./MessageHandlers/ActivityHandler";
 
 //random todos:
 //wanna refactor out the whole cmd is the first word and args are the rest, just work with the whole word array rather than splitting it up
@@ -37,7 +38,6 @@ const botconfig = require("./botconfig.json");
 const Discord = require("discord.js");
 const fs = require("fs");
 const { Console } = require("console");
-
 
 const bot: Client = new Discord.Client({
     intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildPresences, GatewayIntentBits.GuildEmojisAndStickers,
@@ -422,6 +422,10 @@ bot.on(Events.MessageCreate, async message => {
     ///////////////////////////
 
     if (new RegexHandler().ingest(messageArray, message)) {
+        return;
+    }
+
+    if (new ActivityHandler().ingest(messageArray, message)) {
         return;
     }
 
