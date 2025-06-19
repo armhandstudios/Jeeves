@@ -23,7 +23,8 @@ class ActivityHandler extends BaseHandler_1.BaseHandler {
     heatedDebate(message) {
         let channel = message.channel;
         //Only use this command once a day at most
-        if (Date.now().valueOf() < ActivityHandler.lastHeatedDebate.valueOf() + 86400) {
+        var curTime = Date.now().valueOf();
+        if (curTime < ActivityHandler.lastHeatedDebate.valueOf() + 86400) {
             console.log(`Skipping Heated debate at ${Date.now()}`);
             return true;
         }

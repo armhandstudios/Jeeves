@@ -33,7 +33,8 @@ export class ActivityHandler extends BaseHandler {
         let channel: TextChannel = message.channel as TextChannel;
 
         //Only use this command once a day at most
-        if ((Date.now().valueOf() as number) < (ActivityHandler.lastHeatedDebate.valueOf() as number) + 86400) {
+        var curTime: number = Date.now().valueOf() as number
+        if (curTime < (ActivityHandler.lastHeatedDebate.valueOf() as number) + 86400000) {
             console.log(`Skipping Heated debate at ${Date.now()}`);
             return true;
         }
