@@ -46,7 +46,7 @@ export class ActivityHandler extends BaseHandler {
             return true;
         }
 
-        if ((lastFiveMessages[0].createdAt.valueOf() as number) > (lastFiveMessages[4].createdAt.valueOf() as number) - 60000) {
+        if ((lastFiveMessages[0].createdAt.valueOf() as number) > (lastFiveMessages[4].createdAt.valueOf() as number) - 30000) {
 
             switch (Math.floor(Math.random() * 5)) {
                 case 0:

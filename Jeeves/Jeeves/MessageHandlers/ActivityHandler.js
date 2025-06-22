@@ -24,7 +24,7 @@ class ActivityHandler extends BaseHandler_1.BaseHandler {
         let channel = message.channel;
         //Only use this command once a day at most
         var curTime = Date.now().valueOf();
-        if (curTime < ActivityHandler.lastHeatedDebate.valueOf() + 86400) {
+        if (curTime < ActivityHandler.lastHeatedDebate.valueOf() + 86400000) {
             console.log(`Skipping Heated debate at ${Date.now()}`);
             return true;
         }
@@ -33,7 +33,7 @@ class ActivityHandler extends BaseHandler_1.BaseHandler {
         if (lastFiveMessages.length < 5) {
             return true;
         }
-        if (lastFiveMessages[0].createdAt.valueOf() > lastFiveMessages[4].createdAt.valueOf() - 60000) {
+        if (lastFiveMessages[0].createdAt.valueOf() > lastFiveMessages[4].createdAt.valueOf() - 30000) {
             switch (Math.floor(Math.random() * 5)) {
                 case 0:
                     channel.send("Mom, Dad, stop fighting");
