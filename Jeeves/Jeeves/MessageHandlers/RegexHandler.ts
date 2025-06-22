@@ -8,7 +8,7 @@ export class RegexHandler extends BaseHandler {
     ingest(messageArray: string[], message: Message): boolean {
         let ret: boolean = false;
         ret = ret || this.checkForSingleWords(messageArray, message);
-        ret = ret || this.checkForPhrases(message);
+        ret = ret || this.checkForPhrases(messageArray, message);
 
         return ret;
     }
@@ -24,10 +24,11 @@ export class RegexHandler extends BaseHandler {
         return ret;
     }
 
-    checkForPhrases(message: Message): boolean {
+    checkForPhrases(messageArray: string[], message: Message): boolean {
         let ret: boolean = false;
         ret = ret || this.checkForbiddenName(message);
         ret = ret || this.checkTroints(message);
+        ret = ret || this.checkHawkTuah(messageArray, message)
 
         return ret;
     }
@@ -66,5 +67,21 @@ export class RegexHandler extends BaseHandler {
             message.channel.send({ files: [{ attachment: 'trivia_troints.png' }] });
             return true;
         }
+    }
+
+    checkHawkTuah(messageArray: string[], message: Message): boolean {
+        for (let indexStr in messageArray.slice(0, -2)) {
+            var index: number = Number.parseInt(indexStr);
+            if (messageArray[index].toLowerCase() == 'to') {
+                if (messageArray[index + 1].toLowerCase() == 'a') {
+                    console.log("Hawk Tuah detected")
+                    if (Math.random() > 0.9) {
+                        message.channel.send(`Hawk Tuah ${messageArray[index + 2]}`);
+                    }
+                }
+            }
+        }
+
+        return true;
     }
 }
