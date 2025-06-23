@@ -381,9 +381,6 @@ bot.on(discord_js_1.Events.MessageCreate, async (message) => {
     if (new RegexHandler_1.RegexHandler().ingest(messageArray, message)) {
         return;
     }
-    if (new ActivityHandler_1.ActivityHandler().ingest(messageArray, message)) {
-        return;
-    }
     //upvote channel passive effect
     var voteChannel = msgGuildSettings?.voteChannelsContains(message.channel.id);
     console.log(`Vote Channel = ${voteChannel}`);
@@ -737,6 +734,9 @@ bot.on(discord_js_1.Events.MessageCreate, async (message) => {
                 //}
             }
         }
+    }
+    if (new ActivityHandler_1.ActivityHandler().ingest(messageArray, message)) {
+        return;
     }
 });
 if (token() == null) {

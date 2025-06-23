@@ -425,11 +425,6 @@ bot.on(Events.MessageCreate, async message => {
         return;
     }
 
-    if (new ActivityHandler().ingest(messageArray, message)) {
-        return;
-    }
-
-
 
     //upvote channel passive effect
     var voteChannel = msgGuildSettings?.voteChannelsContains(message.channel.id);
@@ -847,6 +842,10 @@ bot.on(Events.MessageCreate, async message => {
                 //}
             }
         }
+    }
+
+    if (new ActivityHandler().ingest(messageArray, message)) {
+        return;
     }
 
 });

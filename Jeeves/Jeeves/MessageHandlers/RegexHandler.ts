@@ -77,11 +77,11 @@ export class RegexHandler extends BaseHandler {
                     console.log("Hawk Tuah detected")
                     if (Math.random() > 0.9) {
                         message.channel.send(`Hawk Tuah ${messageArray[index + 2]}`);
+                        return true;
                     }
                 }
             }
         }
 
-        return true;
     }
 }
