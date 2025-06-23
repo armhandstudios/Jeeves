@@ -63,10 +63,10 @@ function inGuildList(guildList, targetGuild) {
 ///
 function getGuildInGuildList(guildList, targetGuildId) {
     for (var guild of guildList) {
-        console.log(`In getguildinlist, guild = ${guild}`);
-        console.log(guild.guildId + " / " + targetGuildId);
+        //console.log(`In getguildinlist, guild = ${guild}`);
+        //console.log(guild.guildId + " / " + targetGuildId);
         if (guild.guildId === targetGuildId) {
-            console.log(`Found guild ${targetGuildId} in guild list`);
+            //console.log(`Found guild ${targetGuildId} in guild list`);
             return guild;
         }
     }
